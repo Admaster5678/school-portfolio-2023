@@ -54,11 +54,13 @@ while menu:
 paddle_size = [5, 40]
 paddle_v = 1
 
-p1_pos = [5,5]
-p2_pos = [screen_size[0]-paddle_size[0]-5,5]
+p1_pos = [50, 20]
+p2_pos = [screen_size[0]-paddle_size[0]-50, 20]
 
 ball_pos = []
 ball_v = []
+
+net_line_size = (5,15)
 
 prev_time = time.time()
 while game:
@@ -71,24 +73,27 @@ while game:
 
     pressed_keys = pygame.key.get_pressed()
     if pressed_keys[pygame.K_w]:
-        if p1_pos[1]-paddle_v>=5: p1_pos[1] -= paddle_v
+        if p1_pos[1]-paddle_v>=20: p1_pos[1] -= paddle_v
     if pressed_keys[pygame.K_s]:
-        if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p1_pos[1] += paddle_v
+        if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p1_pos[1] += paddle_v
     if pressed_keys[pygame.K_UP]:
-        if p2_pos[1]-paddle_v>=5: p2_pos[1] -= paddle_v
+        if p2_pos[1]-paddle_v>=20: p2_pos[1] -= paddle_v
     if pressed_keys[pygame.K_DOWN]:
-        if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p2_pos[1] += paddle_v
+        if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p2_pos[1] += paddle_v
 
     current_time = time.time()
     dt = current_time-prev_time
     prev_time = current_time
     sleep_time = 1./FPS-dt
-    if sleep_time>0:
-        time.sleep(sleep_time)
+    if sleep_time>0: time.sleep(sleep_time)
 
     screen.fill((0,0,0))
     pygame.draw.ellipse(screen, white, p1_pos+paddle_size)
     pygame.draw.ellipse(screen, white, p2_pos+paddle_size)
+    net_line_x, net_line_y = (screen_size[0]-net_line_size[0])//2, 20
+    while net_line_y <= screen_size[1]-20-net_line_size[1]:
+        pygame.draw.rect(screen, white, (net_line_x, net_line_y)+net_line_size)
+        net_line_y+=net_line_size[1]+5
     pygame.display.update()
 
     
