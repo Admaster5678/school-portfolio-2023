@@ -45,32 +45,31 @@ while menu:
     pygame.display.update()
 
 paddle_size = [5, 40]
-paddle_v = 5
+paddle_v = 1
 
 p1_pos = [5,5]
-
 p2_pos = [screen_size[0]-paddle_size[0]-5,5]
 
 ball_pos = []
 ball_v = []
+
 while game:
     for event in pygame.event.get():
 
-        if event.type == pygame.QUIT:
-            game = False
+        if event.type == pygame.QUIT: game = False
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE: game = False
         
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                if p1_pos[1]-paddle_v>=5: p1_pos[1] -= paddle_v
-            elif event.key == pygame.K_s: 
-                if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p1_pos[1] += paddle_v
-            elif event.key == pygame.K_UP: 
-                if p2_pos[1]-paddle_v>=5: p2_pos[1] -= paddle_v
-            elif event.key == pygame.K_DOWN: 
-                if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p2_pos[1] += paddle_v
+    pressed_keys = pygame.key.get_pressed()
+    if pressed_keys[pygame.K_w]:
+        if p1_pos[1]-paddle_v>=5: p1_pos[1] -= paddle_v
+    elif pressed_keys[pygame.K_s]:
+        if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p1_pos[1] += paddle_v
+    elif pressed_keys[pygame.K_UP]:
+        if p2_pos[1]-paddle_v>=5: p2_pos[1] -= paddle_v
+    elif pressed_keys[pygame.K_DOWN]:
+        if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p2_pos[1] += paddle_v
 
     
     screen.fill((0,0,0))
