@@ -51,11 +51,11 @@ while menu:
 paddle_size = [5, 40]
 paddle_v = 1
 
-p1_pos = [50, 20]
-p2_pos = [screen_size[0]-paddle_size[0]-50, 20]
+p1_pos = [50, (screen_size[1]-paddle_size[1])//2]
+p2_pos = [screen_size[0]-paddle_size[0]-50, (screen_size[1]-paddle_size[1])//2]
 
 ball_r = 5
-ball_pos = [screen_size[0]//2-ball_r, screen_size[1]//2-ball_r]
+ball_pos = [screen_size[0]//2, screen_size[1]//2]
 ball_v = [1, 1]
 
 net_line_size = (5,15)
@@ -79,13 +79,20 @@ while game:
     if pressed_keys[pygame.K_DOWN]:
         if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p2_pos[1] += paddle_v
 
-    if ball_pos[0]<-1*ball_r:
-        ball_pos = [screen_size[0]//2-ball_r, ball_pos[1]]
-        ball_v = ball_v[0]*-1, ball_v[1]*-1
-    elif ball_pos[0]>screen_size[0]-ball_r:
-        ball_pos = [screen_size[0]//2-ball_r, ball_pos[1]]
-        ball_v = ball_v[0]*-1, ball_v[1]*-1
-    elif ball_pos[1]+ball_v[1] < 20 or ball_pos[1]+ball_v[1] > screen_size[1]-20-2*ball_r: ball_v[1]*=-1
+    if ball_pos[0]-ball_r==p1_pos[0]+paddle_size[0]:
+        if p1_pos[1]<=ball_pos[1] and ball_pos[1]<=p1_pos[1]+paddle_size[1]:
+            ball_v[0]*=-1
+    if ball_pos[0]-ball_r+ball_r*2==p2_pos[0]:
+        if p2_pos[1]<=ball_pos[1] and ball_pos[1]<=p2_pos[1]+paddle_size[1]:
+            ball_v[0]*=-1
+
+    if ball_pos[0]<0:
+        ball_pos = [screen_size[0]//2, ball_pos[1]]
+        ball_v = [ball_v[0]*-1, ball_v[1]*-1]
+    elif ball_pos[0]>screen_size[0]:
+        ball_pos = [screen_size[0]//2, ball_pos[1]]
+        ball_v = [ball_v[0]*-1, ball_v[1]*-1]
+    elif ball_pos[1]-ball_r+ball_v[1] < 20 or ball_pos[1]+ball_r+ball_v[1] > screen_size[1]-20-2*ball_r: ball_v[1]*=-1
     
     ball_pos[0]+=ball_v[0]
     ball_pos[1]+=ball_v[1]
@@ -97,8 +104,8 @@ while game:
     if sleep_time>0: time.sleep(sleep_time)
 
     screen.fill((0,0,0))
-    pygame.draw.ellipse(screen, white, p1_pos+paddle_size)
-    pygame.draw.ellipse(screen, white, p2_pos+paddle_size)
+    pygame.draw.rect(screen, white, p1_pos+paddle_size)
+    pygame.draw.rect(screen, white, p2_pos+paddle_size)
     pygame.draw.circle(screen, white, ball_pos, ball_r)
 
     net_line_x, net_line_y = (screen_size[0]-net_line_size[0])//2, 20
