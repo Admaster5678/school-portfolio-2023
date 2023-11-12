@@ -1,7 +1,6 @@
 from pathlib import Path
 assets_dir = str(Path( __file__ ).parent.absolute()) + r'\assets'
 
-
 import pygame, time
 pygame.init()
 
@@ -9,10 +8,8 @@ screen_size = (858, 525)
 screen = pygame.display.set_mode(screen_size)
 FPS = 60
 
-
 white = (255,)*3
 menu, game = True, True
-
 
 big_font = pygame.font.Font(assets_dir+r'\bit5x3.ttf', 100)
 title_text = big_font.render('PONG', False, white)
@@ -57,8 +54,9 @@ paddle_v = 1
 p1_pos = [50, 20]
 p2_pos = [screen_size[0]-paddle_size[0]-50, 20]
 
-ball_pos = []
-ball_v = []
+ball_r = 5
+ball_pos = [screen_size[0]//2-ball_r, screen_size[1]//2-ball_r]
+ball_v = [1, 1]
 
 net_line_size = (5,15)
 
@@ -81,6 +79,17 @@ while game:
     if pressed_keys[pygame.K_DOWN]:
         if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p2_pos[1] += paddle_v
 
+    if ball_pos[0]<-1*ball_r:
+        ball_pos = [screen_size[0]//2-ball_r, ball_pos[1]]
+        ball_v = ball_v[0]*-1, ball_v[1]*-1
+    elif ball_pos[0]>screen_size[0]-ball_r:
+        ball_pos = [screen_size[0]//2-ball_r, ball_pos[1]]
+        ball_v = ball_v[0]*-1, ball_v[1]*-1
+    elif ball_pos[1]+ball_v[1] < 20 or ball_pos[1]+ball_v[1] > screen_size[1]-20-2*ball_r: ball_v[1]*=-1
+    
+    ball_pos[0]+=ball_v[0]
+    ball_pos[1]+=ball_v[1]
+
     current_time = time.time()
     dt = current_time-prev_time
     prev_time = current_time
@@ -90,13 +99,13 @@ while game:
     screen.fill((0,0,0))
     pygame.draw.ellipse(screen, white, p1_pos+paddle_size)
     pygame.draw.ellipse(screen, white, p2_pos+paddle_size)
+    pygame.draw.circle(screen, white, ball_pos, ball_r)
+
     net_line_x, net_line_y = (screen_size[0]-net_line_size[0])//2, 20
     while net_line_y <= screen_size[1]-20-net_line_size[1]:
         pygame.draw.rect(screen, white, (net_line_x, net_line_y)+net_line_size)
         net_line_y+=net_line_size[1]+5
+        
     pygame.display.update()
-
-    
-
 
 pygame.quit()
