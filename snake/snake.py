@@ -72,11 +72,11 @@ while game:
     pressed_keys = pygame.key.get_pressed()
     if pressed_keys[pygame.K_w]:
         if p1_pos[1]-paddle_v>=5: p1_pos[1] -= paddle_v
-    elif pressed_keys[pygame.K_s]:
+    if pressed_keys[pygame.K_s]:
         if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p1_pos[1] += paddle_v
-    elif pressed_keys[pygame.K_UP]:
+    if pressed_keys[pygame.K_UP]:
         if p2_pos[1]-paddle_v>=5: p2_pos[1] -= paddle_v
-    elif pressed_keys[pygame.K_DOWN]:
+    if pressed_keys[pygame.K_DOWN]:
         if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p2_pos[1] += paddle_v
 
     current_time = time.time()
@@ -84,7 +84,6 @@ while game:
     prev_time = current_time
     sleep_time = 1./FPS-dt
     if sleep_time>0:
-        print("slept for", sleep_time)
         time.sleep(sleep_time)
 
     screen.fill((0,0,0))
