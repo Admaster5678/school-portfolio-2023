@@ -44,14 +44,15 @@ while menu:
     screen.blit(title_text, tt_rect[:2])
     pygame.display.update()
 
-p1_pos = ()
-p1_v = 1
+paddle_size = [5, 40]
+paddle_v = 5
 
-p2_pos = ()
-p2_v = 1
+p1_pos = [5,5]
 
-ball_pos = ()
-ball_v = ()
+p2_pos = [screen_size[0]-paddle_size[0]-5,5]
+
+ball_pos = []
+ball_v = []
 while game:
     for event in pygame.event.get():
 
@@ -62,14 +63,19 @@ while game:
             if event.key == pygame.K_ESCAPE: game = False
         
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP: p1_pos -= p1_v
-            elif event.key == pygame.K_DOWN: p1_pos += p1_v
-            elif event.key == pygame.K_w: p2_pos -= p2_v
-            elif event.key == pygame.K_s: p2_pos += p2_v
+            if event.key == pygame.K_w:
+                if p1_pos[1]-paddle_v>=5: p1_pos[1] -= paddle_v
+            elif event.key == pygame.K_s: 
+                if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p1_pos[1] += paddle_v
+            elif event.key == pygame.K_UP: 
+                if p2_pos[1]-paddle_v>=5: p2_pos[1] -= paddle_v
+            elif event.key == pygame.K_DOWN: 
+                if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-5: p2_pos[1] += paddle_v
 
     
     screen.fill((0,0,0))
-
+    pygame.draw.ellipse(screen, white, p1_pos+paddle_size)
+    pygame.draw.ellipse(screen, white, p2_pos+paddle_size)
     pygame.display.update()
 
     
