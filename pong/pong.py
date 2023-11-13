@@ -20,6 +20,9 @@ button_text = medium_font.render('PLAY', False, white)
 bt_rect = ((screen_size[0]-button_text.get_width())//2, screen_size[1]//2, button_text.get_width(), button_text.get_height())
 b_rect = ((screen_size[0]-bt_rect[2]*1.5)//2, screen_size[1]//2-bt_rect[3]//3, bt_rect[2]*1.5, bt_rect[3]*1.5)
 
+num_text_tuple = tuple([big_font.render(str(i), False, white) for i in range(10)])
+num_text_size = (num_text_tuple[0].get_width(), num_text_tuple[0].get_height())
+
 prev_time = time.time()
 while menu:
     for event in pygame.event.get():
@@ -49,16 +52,18 @@ while menu:
     pygame.display.update()
 
 paddle_size = [5, 40]
-paddle_v = 1
+paddle_v = 3
 
 p1_pos = [50, (screen_size[1]-paddle_size[1])//2]
 p2_pos = [screen_size[0]-paddle_size[0]-50, (screen_size[1]-paddle_size[1])//2]
 
 ball_r = 5
 ball_pos = [screen_size[0]//2, screen_size[1]//2]
-ball_v = [1, 1]
+ball_v = [-3, 1]
 
 net_line_size = (5,15)
+
+score = [0,0]
 
 prev_time = time.time()
 while game:
@@ -93,9 +98,25 @@ while game:
     if ball_pos[0]<0:
         ball_pos = [screen_size[0]//2, ball_pos[1]]
         ball_v = [ball_v[0]*-1, ball_v[1]*-1]
+        score[1]+=1
+        if score[1]>10 and score[1]-score[0]>1: 
+            print('player 2 wins')
+            game = False
+        elif score[0]>17 and score[1]>17:
+            print('tie')
+            game = False
+
     elif ball_pos[0]>screen_size[0]:
         ball_pos = [screen_size[0]//2, ball_pos[1]]
         ball_v = [ball_v[0]*-1, ball_v[1]*-1]
+        score[0]+=1
+        if score[0]>10 and score[0]-score[1]>1: 
+            print('player 1 wins')
+            game = False
+        elif score[0]>17 and score[1]>17:
+            print('tie')
+            game = False
+
     elif ball_pos[1]-ball_r+ball_v[1] < 20 or ball_pos[1]+ball_r+ball_v[1] > screen_size[1]-20-2*ball_r: ball_v[1]*=-1
     
     ball_pos[0]+=ball_v[0]
@@ -108,6 +129,12 @@ while game:
     if sleep_time>0: time.sleep(sleep_time)
 
     screen.fill((0,0,0))
+
+    if score[0]>9: screen.blit(num_text_tuple[1], (screen_size[0]//4-num_text_size[0], 40))
+    if score[1]>9: screen.blit(num_text_tuple[1], (screen_size[0]*3//4-num_text_size[0], 40))
+    screen.blit(num_text_tuple[score[0]%10], (screen_size[0]//4, 40))
+    screen.blit(num_text_tuple[score[1]%10], (screen_size[0]*3//4, 40))
+
     pygame.draw.rect(screen, white, p1_pos+paddle_size)
     pygame.draw.rect(screen, white, p2_pos+paddle_size)
     pygame.draw.circle(screen, white, ball_pos, ball_r)
