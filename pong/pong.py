@@ -80,12 +80,12 @@ while game:
         if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p2_pos[1] += paddle_v
 
     if ball_pos[0]-ball_r==p1_pos[0]+paddle_size[0]:
-        if p1_pos[1]<=ball_pos[1] and ball_pos[1]<=p1_pos[1]+paddle_size[1]:
+        if p1_pos[1]<=ball_pos[1]+ball_r and ball_pos[1]-ball_r<=p1_pos[1]+paddle_size[1]:
             ball_v[1] = (ball_v[0]*(2*(ball_pos[1]-p1_pos[1])-paddle_size[1])/paddle_size[1])
             if ball_v[0]<0: ball_v[1]*=-1
             ball_v[0]*=-1
     if ball_pos[0]-ball_r+ball_r*2==p2_pos[0]:
-        if p2_pos[1]<=ball_pos[1] and ball_pos[1]<=p2_pos[1]+paddle_size[1]:
+        if p2_pos[1]<=ball_pos[1]+ball_r and ball_pos[1]-ball_r<=p2_pos[1]+paddle_size[1]:
             ball_v[1] = (ball_v[0]*(2*(ball_pos[1]-p2_pos[1])-paddle_size[1])/paddle_size[1])
             if ball_v[0]<0: ball_v[1]*=-1
             ball_v[0]*=-1
@@ -100,7 +100,6 @@ while game:
     
     ball_pos[0]+=ball_v[0]
     ball_pos[1]+=ball_v[1]
-    print(ball_v[1])
 
     current_time = time.time()
     dt = current_time-prev_time
