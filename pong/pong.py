@@ -58,8 +58,8 @@ p1_pos = [50, (screen_size[1]-paddle_size[1])//2]
 p2_pos = [screen_size[0]-paddle_size[0]-50, (screen_size[1]-paddle_size[1])//2]
 
 ball_r = 5
-ball_pos = [screen_size[0]//2, screen_size[1]//2]
-ball_v = [-3, 1]
+ball_pos = [screen_size[0]/2, screen_size[1]/2]
+ball_v = [-1.25, 1.]
 
 net_line_size = (5,15)
 
@@ -84,19 +84,19 @@ while game:
     if pressed_keys[pygame.K_DOWN]:
         if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p2_pos[1] += paddle_v
 
-    if ball_pos[0]-ball_r==p1_pos[0]+paddle_size[0]:
+    if ball_pos[0]-ball_r<=p1_pos[0]+paddle_size[0] and ball_pos[0]-ball_r-ball_v[0]>p1_pos[0]+paddle_size[0]:
         if p1_pos[1]<=ball_pos[1]+ball_r and ball_pos[1]-ball_r<=p1_pos[1]+paddle_size[1]:
             ball_v[1] = (ball_v[0]*(2*(ball_pos[1]-p1_pos[1])-paddle_size[1])/paddle_size[1])
             if ball_v[0]<0: ball_v[1]*=-1
             ball_v[0]*=-1
-    if ball_pos[0]-ball_r+ball_r*2==p2_pos[0]:
+    if ball_pos[0]+ball_r>=p2_pos[0] and ball_pos[0]+ball_r-ball_v[0]<p2_pos[0]:
         if p2_pos[1]<=ball_pos[1]+ball_r and ball_pos[1]-ball_r<=p2_pos[1]+paddle_size[1]:
             ball_v[1] = (ball_v[0]*(2*(ball_pos[1]-p2_pos[1])-paddle_size[1])/paddle_size[1])
             if ball_v[0]<0: ball_v[1]*=-1
             ball_v[0]*=-1
 
     if ball_pos[0]<0:
-        ball_pos = [screen_size[0]//2, ball_pos[1]]
+        ball_pos = [screen_size[0]/2, ball_pos[1]]
         ball_v = [ball_v[0]*-1, ball_v[1]*-1]
         score[1]+=1
         if score[1]>10 and score[1]-score[0]>1: 
@@ -107,7 +107,7 @@ while game:
             game = False
 
     elif ball_pos[0]>screen_size[0]:
-        ball_pos = [screen_size[0]//2, ball_pos[1]]
+        ball_pos = [screen_size[0]/2, ball_pos[1]]
         ball_v = [ball_v[0]*-1, ball_v[1]*-1]
         score[0]+=1
         if score[0]>10 and score[0]-score[1]>1: 
