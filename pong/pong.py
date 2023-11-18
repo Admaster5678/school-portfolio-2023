@@ -8,7 +8,7 @@ screen_size = (858, 525)
 screen = pygame.display.set_mode(screen_size)
 FPS = 60
 
-white = (255,)*3
+white, black, grey = (255,)*3, (0,)*3, (48,)*3
 menu, game, end_scr = True, True, True
 
 big_font = pygame.font.Font(str(Path(assets_dir, 'bit5x3.ttf')), 100)
@@ -19,6 +19,7 @@ medium_font = pygame.font.Font(str(Path(assets_dir, 'bit5x3.ttf')), 25)
 button_text = medium_font.render('PLAY', False, white)
 bt_rect = ((screen_size[0]-button_text.get_width())//2, screen_size[1]//2, button_text.get_width(), button_text.get_height())
 b_rect = ((screen_size[0]-bt_rect[2]*1.5)//2, screen_size[1]//2-bt_rect[3]//3, bt_rect[2]*1.5, bt_rect[3]*1.5)
+h_button_text = medium_font.render('PLAY', False, grey)
 
 num_text_tuple = tuple([big_font.render(str(i), False, white) for i in range(10)])
 num_text_size = (num_text_tuple[0].get_width(), num_text_tuple[0].get_height())
@@ -45,9 +46,16 @@ while menu:
     prev_time = current_time
     sleep_time = 1./FPS-dt
     if sleep_time>0: time.sleep(sleep_time)
+    
+    screen.fill(black)
 
-    screen.blit(button_text, bt_rect[:2])
-    pygame.draw.rect(screen, white, b_rect, 2)
+    mouse_pos = pygame.mouse.get_pos()
+    if b_rect[0] <= mouse_pos[0] and mouse_pos[0] <= b_rect[0]+b_rect[2] and b_rect[1] <= mouse_pos[1] and mouse_pos[1] <= b_rect[1]+b_rect[3]:
+        screen.blit(h_button_text, bt_rect[:2])
+        pygame.draw.rect(screen, grey, b_rect, 2)
+    else:
+        screen.blit(button_text, bt_rect[:2])
+        pygame.draw.rect(screen, white, b_rect, 2)
     screen.blit(title_text, tt_rect[:2])
     pygame.display.update()
 
@@ -136,7 +144,7 @@ while game:
     sleep_time = 1./FPS-dt
     if sleep_time>0: time.sleep(sleep_time)
 
-    screen.fill((0,0,0))
+    screen.fill(black)
 
     if score[0]>9: screen.blit(num_text_tuple[1], (screen_size[0]//4-num_text_size[0], 40))
     if score[1]>9: screen.blit(num_text_tuple[1], (screen_size[0]*3//4-num_text_size[0], 40))
@@ -158,6 +166,7 @@ end_result_text = big_font.render('Tie!' if score[0] == score[1] else 'Player '+
 end_result_text_rect = ((screen_size[0]-end_result_text.get_width())//2, screen_size[1]//3-end_result_text.get_height(), end_result_text.get_width(), end_result_text.get_height())
 
 exit_button_text = medium_font.render('Exit', False, white)
+h_exit_button_text = medium_font.render('Exit', False, grey)
 exit_button_text_rect = ((screen_size[0]-exit_button_text.get_width())//2, screen_size[1]//2, exit_button_text.get_width(), exit_button_text.get_height())
 exit_button_rect = ((screen_size[0]-exit_button_text_rect[2]*1.5)//2, screen_size[1]//2-exit_button_text_rect[3]//3, exit_button_text_rect[2]*1.5, exit_button_text_rect[3]*1.5)
 
@@ -181,10 +190,17 @@ while end_scr:
     sleep_time = 1./FPS-dt
     if sleep_time>0: time.sleep(sleep_time)
 
-    screen.fill((0,0,0))
+    screen.fill(black)
+    
+    mouse_pos = pygame.mouse.get_pos()
+    if exit_button_rect[0] <= mouse_pos[0] and mouse_pos[0] <= exit_button_rect[0]+exit_button_rect[2] and exit_button_rect[1] <= mouse_pos[1] and mouse_pos[1] <= exit_button_rect[1]+exit_button_rect[3]:
+        screen.blit(h_exit_button_text, exit_button_text_rect[:2])
+        pygame.draw.rect(screen, grey, exit_button_rect, 2)
+    else:
+        screen.blit(exit_button_text, exit_button_text_rect[:2])
+        pygame.draw.rect(screen, white, exit_button_rect, 2)
+
     screen.blit(end_result_text, end_result_text_rect[:2])
-    screen.blit(exit_button_text, exit_button_text_rect[:2])
-    pygame.draw.rect(screen, white, exit_button_rect, 2)
     
     pygame.display.update()
 
