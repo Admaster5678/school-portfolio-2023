@@ -1,5 +1,5 @@
 from pathlib import Path
-assets_dir = str(Path( __file__ ).parent.absolute()) + r'\assets'
+assets_dir = Path(Path( __file__ ).parent, 'assets')
 
 import pygame, time
 pygame.init()
@@ -11,11 +11,11 @@ FPS = 60
 white = (255,)*3
 menu, game = True, True
 
-big_font = pygame.font.Font(assets_dir+r'\bit5x3.ttf', 100)
+big_font = pygame.font.Font(str(Path(assets_dir, 'bit5x3.ttf')), 100)
 title_text = big_font.render('PONG', False, white)
 tt_rect = ((screen_size[0]-title_text.get_width())//2, screen_size[1]//3-title_text.get_height(), title_text.get_width(), title_text.get_height())
 
-medium_font = pygame.font.Font(assets_dir + r'\bit5x3.ttf', 25)
+medium_font = pygame.font.Font(str(Path(assets_dir, 'bit5x3.ttf')), 25)
 button_text = medium_font.render('PLAY', False, white)
 bt_rect = ((screen_size[0]-button_text.get_width())//2, screen_size[1]//2, button_text.get_width(), button_text.get_height())
 b_rect = ((screen_size[0]-bt_rect[2]*1.5)//2, screen_size[1]//2-bt_rect[3]//3, bt_rect[2]*1.5, bt_rect[3]*1.5)
