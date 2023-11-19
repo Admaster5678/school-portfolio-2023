@@ -64,13 +64,13 @@ while menu:
     screen.blit(title_text, tt_rect[:2])
     pygame.display.update()
 
-paddle_size = [5, 40]
+paddle_size = [5, 55]
 paddle_v = 5
 
 p1_pos = [50, (screen_size[1]-paddle_size[1])//2]
 p2_pos = [screen_size[0]-paddle_size[0]-50, (screen_size[1]-paddle_size[1])//2]
 
-ball_r = 5
+ball_r = 6
 ball_pos = [screen_size[0]/2, screen_size[1]/2]
 ball_v = [-2., 1.]
 
