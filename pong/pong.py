@@ -3,6 +3,7 @@ assets_dir = Path(Path( __file__ ).parent, 'assets')
 
 import pygame, time
 pygame.init()
+pygame.mixer.init()
 
 screen_size = (858, 525)
 screen = pygame.display.set_mode(screen_size)
@@ -23,6 +24,10 @@ h_button_text = medium_font.render('PLAY', False, grey)
 
 num_text_tuple = tuple([big_font.render(str(i), False, white) for i in range(10)])
 num_text_size = (num_text_tuple[0].get_width(), num_text_tuple[0].get_height())
+
+hit_sound = pygame.mixer.Sound(str(Path(assets_dir, 'hit.mp3')))
+bounce_sound = pygame.mixer.Sound(str(Path(assets_dir, 'bounce.mp3')))
+score_sound = pygame.mixer.Sound(str(Path(assets_dir, 'score.mp3')))
 
 prev_time = time.time()
 while menu:
@@ -99,6 +104,7 @@ while game:
             ball_v[1] = (ball_v[0]*(2*(ball_pos[1]-p1_pos[1])-paddle_size[1])/paddle_size[1])
             if ball_v[0]<0: ball_v[1]*=-1
             ball_v[0]*=-1
+            hit_sound.play()
             hit_count+=1
             if hit_count>4:
                 hit_count = 0
@@ -108,6 +114,7 @@ while game:
             ball_v[1] = (ball_v[0]*(2*(ball_pos[1]-p2_pos[1])-paddle_size[1])/paddle_size[1])
             if ball_v[0]<0: ball_v[1]*=-1
             ball_v[0]*=-1
+            hit_sound.play()
             hit_count+=1
             if hit_count>4:
                 hit_count = 0
@@ -118,6 +125,7 @@ while game:
         ball_v = [2., ball_v[1]*-1]
         hit_count=0
         score[1]+=1
+        score_sound.play()
         if score[1]>10 and score[1]-score[0]>1:
             game = False
         elif score[0]>17 and score[1]>17:
@@ -128,12 +136,15 @@ while game:
         ball_v = [-2., ball_v[1]*-1]
         hit_count=0
         score[0]+=1
+        score_sound.play()
         if score[0]>10 and score[0]-score[1]>1: 
             game = False
         elif score[0]>17 and score[1]>17:
             game = False
 
-    elif ball_pos[1]-ball_r+ball_v[1] < 20 or ball_pos[1]+ball_r+ball_v[1] > screen_size[1]-20-2*ball_r: ball_v[1]*=-1
+    elif ball_pos[1]-ball_r+ball_v[1] < 20 or ball_pos[1]+ball_r+ball_v[1] > screen_size[1]-20-2*ball_r:
+        bounce_sound.play()
+        ball_v[1]*=-1
     
     ball_pos[0]+=ball_v[0]
     ball_pos[1]+=ball_v[1]
@@ -204,4 +215,5 @@ while end_scr:
     
     pygame.display.update()
 
+pygame.mixer.quit()
 pygame.quit()
