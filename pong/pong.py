@@ -182,13 +182,14 @@ while game:
 
     # CHECKS IF BALL LEFT SCREEN AND UPDATES SCORES AND GAME STATUS
     if ball_pos[0]<0 or ball_pos[0]>screen_size[0]:
+        score[int(ball_pos[0]<0)]+=1
         ball_v = [4. * (1 if ball_pos[0]<0 else -1), ball_v[1]*4./ball_v[0]*-1]
         ball_pos = [screen_size[0]/2, ball_pos[1]]
         score_sound.play()
         hit_count=0
         if  score[0]>10 and score[0]-score[1]>1 or score[1]>10 and score[1]-score[0]>1 \
         or  score[0]>17 and score[1]>17: game = False
-        score[int(ball_pos[0]<0)]+=1
+
     # OTHERWISE, CHECKS IF BALL WILL COLLIDE WITH VERTICAL BOUNDARIES
     elif ball_pos[1]-ball_r+ball_v[1] < 20 or ball_pos[1]+ball_r+ball_v[1] > screen_size[1]-20:
         bounce_sound.play()
