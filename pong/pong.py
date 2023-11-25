@@ -1,13 +1,12 @@
 from pathlib import Path
 assets_dir = Path(Path( __file__ ).parent, 'assets')
 
-import pygame, time
+import pygame
 pygame.init()
 pygame.mixer.init()
 
 screen_size = (858, 525)
 screen = pygame.display.set_mode(screen_size)
-FPS = 60
 
 white, black, grey = (255,)*3, (0,)*3, (48,)*3
 menu, game, end_scr = True, True, True
@@ -29,7 +28,7 @@ hit_sound = pygame.mixer.Sound(str(Path(assets_dir, 'hit.mp3')))
 bounce_sound = pygame.mixer.Sound(str(Path(assets_dir, 'bounce.mp3')))
 score_sound = pygame.mixer.Sound(str(Path(assets_dir, 'score.mp3')))
 
-prev_time = time.time()
+prev_time = pygame.time.get_ticks()
 while menu:
     for event in pygame.event.get():
 
@@ -45,13 +44,6 @@ while menu:
                 if b_rect[1] <= event.pos[1] and event.pos[1] <= b_rect[1]+b_rect[3]:
                     menu = False
 
-    
-    current_time = time.time()
-    dt = current_time-prev_time
-    prev_time = current_time
-    sleep_time = 1./FPS-dt
-    if sleep_time>0: time.sleep(sleep_time)
-    
     screen.fill(black)
 
     mouse_pos = pygame.mouse.get_pos()
@@ -65,14 +57,14 @@ while menu:
     pygame.display.update()
 
 paddle_size = [5, 55]
-paddle_v = 5
+paddle_v = 10
 
 p1_pos = [50, (screen_size[1]-paddle_size[1])//2]
 p2_pos = [screen_size[0]-paddle_size[0]-50, (screen_size[1]-paddle_size[1])//2]
 
 ball_r = 6
 ball_pos = [screen_size[0]/2, screen_size[1]/2]
-ball_v = [-2., 1.]
+ball_v = [-4., 2.]
 
 hit_count = 0
 
@@ -80,8 +72,12 @@ net_line_size = (5,15)
 
 score = [0,0]
 
-prev_time = time.time()
+prev_time = pygame.time.get_ticks()
 while game:
+    current_time = pygame.time.get_ticks()
+    dt = current_time-prev_time
+    prev_time = current_time
+    
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT: game, end_scr = False, False
@@ -91,13 +87,13 @@ while game:
 
     pressed_keys = pygame.key.get_pressed()
     if pressed_keys[pygame.K_w]:
-        if p1_pos[1]-paddle_v>=20: p1_pos[1] -= paddle_v
+        if p1_pos[1]-paddle_v>=20: p1_pos[1] -= paddle_v*dt*FPS/1000
     if pressed_keys[pygame.K_s]:
-        if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p1_pos[1] += paddle_v
+        if p1_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p1_pos[1] += paddle_v*dt*FPS/1000
     if pressed_keys[pygame.K_UP]:
-        if p2_pos[1]-paddle_v>=20: p2_pos[1] -= paddle_v
+        if p2_pos[1]-paddle_v>=20: p2_pos[1] -= paddle_v*dt*FPS/1000
     if pressed_keys[pygame.K_DOWN]:
-        if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p2_pos[1] += paddle_v
+        if p2_pos[1]+paddle_v<=screen_size[1]-paddle_size[1]-20: p2_pos[1] += paddle_v*dt*FPS/1000
 
     if ball_pos[0]-ball_r<=p1_pos[0]+paddle_size[0] and ball_pos[0]-ball_r-ball_v[0]>p1_pos[0]+paddle_size[0]:
         if p1_pos[1]<=ball_pos[1]+ball_r and ball_pos[1]-ball_r<=p1_pos[1]+paddle_size[1]:
@@ -122,7 +118,7 @@ while game:
 
     if ball_pos[0]<0:
         ball_pos = [screen_size[0]/2, ball_pos[1]]
-        ball_v = [2., ball_v[1]*-1]
+        ball_v = [4., ball_v[1]*-1]
         hit_count=0
         score[1]+=1
         score_sound.play()
@@ -133,7 +129,7 @@ while game:
 
     elif ball_pos[0]>screen_size[0]:
         ball_pos = [screen_size[0]/2, ball_pos[1]]
-        ball_v = [-2., ball_v[1]*-1]
+        ball_v = [-4., ball_v[1]*-1]
         hit_count=0
         score[0]+=1
         score_sound.play()
@@ -146,14 +142,8 @@ while game:
         bounce_sound.play()
         ball_v[1]*=-1
     
-    ball_pos[0]+=ball_v[0]
-    ball_pos[1]+=ball_v[1]
-
-    current_time = time.time()
-    dt = current_time-prev_time
-    prev_time = current_time
-    sleep_time = 1./FPS-dt
-    if sleep_time>0: time.sleep(sleep_time)
+    ball_pos[0]+=ball_v[0]*dt*FPS/1000
+    ball_pos[1]+=ball_v[1]*dt*FPS/1000
 
     screen.fill(black)
 
@@ -181,7 +171,7 @@ h_exit_button_text = medium_font.render('Exit', False, grey)
 exit_button_text_rect = ((screen_size[0]-exit_button_text.get_width())//2, screen_size[1]//2, exit_button_text.get_width(), exit_button_text.get_height())
 exit_button_rect = ((screen_size[0]-exit_button_text_rect[2]*1.5)//2, screen_size[1]//2-exit_button_text_rect[3]//3, exit_button_text_rect[2]*1.5, exit_button_text_rect[3]*1.5)
 
-prev_time = time.time()
+prev_time = pygame.time.get_ticks()
 while end_scr:
     for event in pygame.event.get():
 
@@ -194,12 +184,6 @@ while end_scr:
         if event.type == pygame.MOUSEBUTTONUP:
             if exit_button_rect[0] <= event.pos[0] and event.pos[0] <= exit_button_rect[0]+exit_button_rect[2]:
                 if exit_button_rect[1] <= event.pos[1] and event.pos[1] <= exit_button_rect[1]+exit_button_rect[3]: end_scr = False
-
-    current_time = time.time()
-    dt = current_time-prev_time
-    prev_time = current_time
-    sleep_time = 1./FPS-dt
-    if sleep_time>0: time.sleep(sleep_time)
 
     screen.fill(black)
     
