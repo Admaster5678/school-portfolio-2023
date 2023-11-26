@@ -44,11 +44,11 @@ def paddle_hit(left_paddle, paddle_pos, paddle_size, ball_pos, ball_r):
                             ball_pos[0]-ball_r-ball_v[0]>paddle_pos[0]+paddle_size[0] and \
                             p1_pos[1]<=ball_pos[1] and \
                             ball_pos[1]<=p1_pos[1]+paddle_size[1]
-    
+
     return  ball_pos[0]+ball_r>=p2_pos[0] and ball_pos[0]+ball_r-ball_v[0]<p2_pos[0] and \
             p2_pos[1]<=ball_pos[1] and ball_pos[1]<=p2_pos[1]+paddle_size[1]
 
-# FUNCTION TO UPDATE VARIABLES WHEN 
+# FUNCTION TO UPDATE VARIABLES WHEN PADDLE HITS THE BALL
 def hit_update(paddle_pos, paddle_size, ball_pos, ball_v, hit_count):
     # ANGLE AT WHICH BALL IS SHOT DEPENDS ON HOW FAR IT HIT THE PADDLE FROM THE CENTRE
     ball_v[1] = (ball_v[0]*(2*(ball_pos[1]-paddle_pos[1])-paddle_size[1])/paddle_size[1])
@@ -109,7 +109,7 @@ bounce_sound = pygame.mixer.Sound(str(Path(assets_dir, 'bounce.mp3')))
 score_sound = pygame.mixer.Sound(str(Path(assets_dir, 'score.mp3')))
 
 prev_time = pygame.time.get_ticks()
-while menu:
+while menu: # LOOP THAT CONTROLS MENU (112 to 144)
 
     mouse_over_play_b = mouseover(play_b_rect, pygame.mouse.get_pos())
 
@@ -130,7 +130,7 @@ while menu:
     prev_time = current_time
     sleep_time = 1000./FPS - dt
     if sleep_time>0: pygame.time.delay(int(sleep_time))
-    
+
     screen.fill(black)
 
     if mouse_over_play_b:
@@ -144,13 +144,13 @@ while menu:
     pygame.display.update()
 
 prev_time = pygame.time.get_ticks()
-while game:
+while game: #LOOP THAT CONTROLS GAME (147 to 221)
     #FPS OF THE WINDOW IS UNLOCKED BUT THE POSITIONS WILL STILL
     # BE UPDATED BY V*FPS(CONST) EVERY SECOND; SO THE VELOCITY IS FIXED
     current_time = pygame.time.get_ticks()
     dt = current_time-prev_time
     prev_time = current_time
-    
+
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT: game, end_scr = (False,)*2
@@ -194,7 +194,7 @@ while game:
     elif ball_pos[1]-ball_r+ball_v[1] < 20 or ball_pos[1]+ball_r+ball_v[1] > screen_size[1]-20:
         bounce_sound.play()
         ball_v[1]*=-1
-    
+
     # REGULAR BALL UPDATION
     ball_pos[0]+=ball_v[0]*dt*FPS/1000
     ball_pos[1]+=ball_v[1]*dt*FPS/1000
@@ -217,7 +217,7 @@ while game:
     while net_line_y <= screen_size[1]-20-net_line_size[1]:
         pygame.draw.rect(screen, white, (net_line_x, net_line_y)+net_line_size)
         net_line_y+=net_line_size[1]+5
-        
+
     pygame.display.update()
 
 # DONE HERE SO THAT ONLY 1 SURFACE NEEDS TO BE CREATED DEPENDING ON THE OUTCOME
@@ -232,7 +232,7 @@ end_result_text_rect = (   (screen_size[0]-end_result_text.get_width())//2,
                        )
 
 prev_time = pygame.time.get_ticks()
-while end_scr:
+while end_scr: # LOOP THAT CONTROLS THE RESULTS SCREEN (235 TO 267)
 
     mouse_over_exit_b = mouseover(exit_b_rect, pygame.mouse.get_pos())
 
@@ -263,7 +263,7 @@ while end_scr:
         pygame.draw.rect(screen, white, exit_b_rect, 2)
 
     screen.blit(end_result_text, end_result_text_rect[:2])
-    
+
     pygame.display.update()
 
 pygame.mixer.quit()
